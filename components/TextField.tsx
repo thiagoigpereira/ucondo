@@ -12,13 +12,13 @@ const styles = StyleSheet.create({
   label: {
     color: "#666666",
     fontWeight: "bold",
-    fontSize: 15
+    fontSize: 15,
   },
   textField: {
     backgroundColor: "white",
     borderRadius: 10,
-    marginTop: 5,
-    paddingLeft: 10
+    marginVertical: 10,
+    paddingLeft: 10,
   },
 });
 export default TextField;

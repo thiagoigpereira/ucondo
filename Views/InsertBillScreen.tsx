@@ -1,61 +1,70 @@
-import { useState } from 'react';
-import { View, Button, StyleSheet } from 'react-native';
+import { useState, useEffect } from "react";
+import { View, Button, StyleSheet, TextInput } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { Bill } from '../Interfaces/Bill';
-import TextField from '../components/TextField';
-import SelectField from '../components/SelectField';
+import { Bill } from "../Interfaces/Bill";
+import TextField from "../components/TextField";
+import SelectField from "../components/SelectField";
 
 const InsertBillScreen = ({ navigation }) => {
-  const recive = ['Sim','Não'];
-  const typeOptions = ['Receita', 'Despesas'];
+  const recive = ["Sim", "Não"];
+  const typeOptions = ["Receita", "Despesas"];
 
-  const [bill, setBill] = useState<Bill[]>([])
+  const [bills, setBills] = useState([]);
+  const [bill, setBill] = useState({});
 
-  const insertBill = async() => {
+  useEffect(() => {
+    updateBills();
+  }, []);
+
+  const insertBill = async () => {
     try {
-      await AsyncStorage.setItem("bills", JSON.stringify(bill));
-      navigation.navigate("Plano de Contas");
-      console.log("Form data saved:", bill);
-      
+      const updatedBillData = [...bills, bill];
+      await AsyncStorage.setItem("bills", JSON.stringify(updatedBillData));
+      console.log("TESTE DE LOG", bills);
     } catch (error) {
-      console.log("Error saving form data:", error);
+      console.log("Error saving data: ", error);
+    }
+  };
+
+  const updateBills = async () => {
+    try {
+      const data = await AsyncStorage.getItem("bills");
+      if (data !== null) {
+        setBills(JSON.parse(data));
+      }
+    } catch (error) {
+      console.log("Error upadating data: ", error);
     }
   };
 
   return (
-    <View style={styles.screen}>
-      <TextField
-        label={"Código"}
-        placeholder={"1.1"}
-        onChangeText={(text) => setBill({ ...bill, code: text })}
-      />
-      <TextField
-        label={"Nome"}
-        onChangeText={(text) => setBill({ ...bill, name: text })}
-      />
-      <SelectField
-        label={"Tipo"}
-        options={typeOptions}
-        onValueChange={(value) => setBill({ ...bill, type: value })}
-      />
-      <SelectField
-        label={"Aceita Lançamentos?"}
-        options={recive}
-        onValueChange={(value) =>
-          setBill({ ...bill, acceptLancamentos: value })
-        }
-      />
-      <Button title="Salvar Conta" onPress={insertBill} />
+    <View style={styles.container}>
+      <View>
+        <TextInput
+          style={styles.textInput}
+          onChangeText={(codeText) => setBill({ ...bill, code: codeText })}
+          placeholder="CÃ³digo"
+        />
+        <TextInput
+          style={styles.textInput}
+          onChangeText={(nameText) => setBill({ ...bill, name: nameText })}
+          placeholder="Nome"
+        />
+        <Button title="Salvar" onPress={() => insertBill()} />
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  screen: {
-    padding: 20,
-    borderRadius: 20,
-    backgroundColor: "#E5E5E5",
+  container: {
+    paddingVertical: 50,
+  },
+  textInput: {
+    marginVertical: 10,
+    backgroundColor: "#333",
+    color: "white",
   },
 });
 

@@ -1,12 +1,13 @@
 import { useState } from 'react';
-import { View, Text } from 'react-native'
+import { View, Text, StyleSheet } from 'react-native'
 import { Picker } from "@react-native-picker/picker";
 const SelectField = ({label, options, ...inputProps}) => {
   const [selectedOptions, setSelectedOptions] = useState('')
   return(
     <View>
-      <Text>{label}</Text>
+      <Text style={styles.label}>{label}</Text>
       <Picker
+        style={styles.field}
         selectedValue={selectedOptions}
         onValueChange={(itemValue) => setSelectedOptions(itemValue)}
       >
@@ -17,5 +18,19 @@ const SelectField = ({label, options, ...inputProps}) => {
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  label: {
+    color: "#666666",
+    fontWeight: "bold",
+    fontSize: 15,
+  },
+  field: {
+    backgroundColor: "white",
+    borderRadius: 10,
+    marginVertical: 10,
+    paddingLeft: 10,
+  },
+});
 
 export default SelectField;

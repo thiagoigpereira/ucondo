@@ -1,12 +1,16 @@
 import { useState, useEffect } from 'react';
-import { View, Text, Button, FlatList } from "react-native";
-import { Bill
- } from "../Interfaces/Bill";
+import { View, Text, Button, StyleSheet } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import BillItem from '../components/BillItem';
+import { Bill } from "../Interfaces/Bill";
+
 const HomeScreen = ({navigation}) => {
   const [bills, setBills] = useState<Bill[]>([])
   useEffect(() => {
     loadBills();
+    navigation.addListener('focus', () => loadBills);
+    
   },[])
 
   const loadBills = async() => {
@@ -15,34 +19,37 @@ const HomeScreen = ({navigation}) => {
       if(storagedBills) {
         const parsedBills:Bill[] = JSON.parse(storagedBills);
         setBills(parsedBills);
+        console.log("BILLS HOME => ", bills);
       } else {
-        
+        console.log('Lista está vazia')
       }
     } catch(error) {
       console.log('Error fetching the list', error);
     }
   }
 
-  const renderBills = ({bill}: {bill: Bill}) => {
-    <View>
-      <Text>{bill.code}</Text>
-      <Text>{bill.name}</Text>
-    </View>
-  }
-
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <FlatList
-        data={bills}
-        renderItem={renderBills}
-        keyExtractor={(item, index) => index.toString()}
-      />
+    <View style={styles.container}>
+      <Text>Listagem</Text>
+      <View style={styles.taskWrapper}>
+        
+      </View>
       <Button
-        title="TESTE"
+        title="INSERIR CONTA"
         onPress={() => navigation.navigate("Inserir Conta")}
       />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  taskWrapper: {
+    paddingTop: 20,
+    paddingHorizontal: 20,
+  },
+});
 
 export default HomeScreen;
