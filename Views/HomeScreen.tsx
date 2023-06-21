@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { View, Text, Button, StyleSheet } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import BillItem from '../components/BillItem';
 import { Bill } from "../Interfaces/Bill";
 
 const HomeScreen = ({navigation}) => {
@@ -21,7 +20,7 @@ const HomeScreen = ({navigation}) => {
         setBills(parsedBills);
         console.log("BILLS HOME => ", bills);
       } else {
-        console.log('Lista está vazia')
+        console.log('Lista estï¿½ vazia')
       }
     } catch(error) {
       console.log('Error fetching the list', error);
